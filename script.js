@@ -22,6 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Кнопку Enter натиснуто!");
             card1.classList.add('hidden');
             card2.classList.remove('hidden');
+
+            const iframe = document.getElementById('bgMusic');
+            if (iframe) {
+                iframe.src += "&autoplay=1";
+            }
         });
     }
 
