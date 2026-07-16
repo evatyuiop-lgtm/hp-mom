@@ -23,9 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
             card1.classList.add('hidden');
             card2.classList.remove('hidden');
 
-            const iframe = document.getElementById('bgMusic');
-            if (iframe) {
-                iframe.src += "&autoplay=1";
+            const audio = document.getElementById('bgMusic');
+            if (audio) {
+                audio.play().catch(error => {
+                    console.log("Помилка відтворення:", error);
+                });
             }
         });
     }
