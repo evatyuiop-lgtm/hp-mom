@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Mom!</title>
+    <link rel="stylesheet" href="style.css">
+   
+</head>
+<body>
+<iframe id="bgMusic" width="1" height="1" src="https://www.youtube.com/embed/hx7nSxl68v4?enablejsapi=1&loop=1&playlist=hx7nSxl68v4" frameborder="0" allow="autoplay; encrypted-media" style="position: absolute; top: -9999px; left: -9999px; visibility: hidden;"></iframe>
+
+    <canvas id="galaxyCanvas"></canvas>
+
+    <div class="welcome-screen" id="card1">
+        <h1>A Galaxy of Love for You</h1>
+        <p>Happy Birthday to the best mom in the world!</p>
+        <button id="enterBtn">Enter My World❤</button>
+    </div>
+
+    <div id="card2" class="welcome-screen hidden" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 90%; max-width: 600px; z-index: 10;">
+        <h1 style="font-size: 2.5rem; font-weight: bold; background: linear-gradient(45deg, #ff007f, #ff77ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; text-shadow: none;">For the best mom!</h1>
+	<p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 30px; color: #ffffff; text-shadow: none; font-weight: normal;">
+	    Ти у мене, мамо, просто вищий клас,<br>
+            Вмієш заспокоїти і підтримати нас.<br>
+            Тож бажаю купу грошей, щастя і добра,<br>
+            Щоб відпочивати часом вже пора.<br>
+            Хай сусіди заздрять, як ти молодієш,<br>
+            І збувається усе, про що ти мрієш!
+	</p>
+	<button id="backBtn">Back</button>
+    </div>	
+    
+    <script>
+        const enterBtn = document.getElementById('enterBtn');
+        const backBtn = document.getElementById('backBtn');
+        const card1 = document.getElementById('card1');
+        const card2 = document.getElementById('card2');
+
+        if (enterBtn) {
+            enterBtn.addEventListener('click', () => {
+                card1.classList.add('hidden');
+                card2.classList.remove('hidden');
+		const music = document.getElementById('bgMusic');
+		if (music) {
+		    music.play().catch(e => console.log("Музика заблокована браузером, потрібен клік:", e));
+		}
+            });
+        }
+
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                card2.classList.add('hidden');
+                card1.classList.remove('hidden');
+            });
+        }
+
+        const canvas = document.getElementById('galaxyCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const wordsList = ["Любов", "Матуся", "Ніжність", "Тепло", "Найкраща", "Дякую", "Родина", "Щастя", "Краса", "Турбота", "Натхнення", "Затишок", "Посмішка", "Мрія", "Вишивка"];
+        const particles = [];
+        const words = [];
+
+        function getHeartPoint(t) {
+            return {
+                x: 16 * Math.pow(Math.sin(t), 3),
+                y: -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t))
+            };
+        }
+
+        for (let i = 0; i < 250; i++) {
+            const t = Math.random() * Math.PI * 2;
+            const point = getHeartPoint(t);
+            particles.push({
+                baseX: point.x * 22,
+                baseY: point.y * 22,
+                x: Math.random() * width,
+                y: Math.random() * height,
+                speed: 0.03 + Math.random() * 0.04,
+                size: 1.5 + Math.random() * 2,
+                alpha: 0.4 + Math.random() * 0.6,
+                angle: Math.random() * Math.PI * 2
+            });
+        }
+
+        for (let i = 0; i < 25; i++) {
+            words.push({
+                text: wordsList[Math.floor(Math.random() * wordsList.length)],
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 1.5,
+                vy: (Math.random() - 0.5) * 1.5,
+                size: 14 + Math.random() * 8,
+                alpha: 0.3 + Math.random() * 0.5
+            });
+        }
+
+        let pulse = 1;
+        let pulseDirection = 0.005;
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            pulse += pulseDirection;
+            if (pulse > 1.1 || pulse < 0.95) {
+                pulseDirection = -pulseDirection;
+            }
+
+            const centerX = width / 2;
+            const centerY = height / 2;
+
+            particles.forEach(p => {
+                const targetX = centerX + p.baseX * pulse;
+                const targetY = centerY + p.baseY * pulse;
+
+                p.x += (targetX - p.x) * p.speed;
+                p.y += (targetY - p.y) * p.speed;
+
+                ctx.fillStyle = `rgba(255, 20, 147, ${p.alpha})`;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = "pink";
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+
+            words.forEach(w => {
+                w.x += w.vx;
+                w.y += w.vy;
+
+                if (w.x < 0 || w.x > width) w.vx *= -1;
+                if (w.y < 0 || w.y > height) w.vy *= -1;
+
+                ctx.fillStyle = `rgba(255, 105, 180, ${w.alpha})`;
+                ctx.font = `${w.size}px Arial`;
+                ctx.fillText(w.text, w.x, w.y);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+ 
+</body>
+</html>
