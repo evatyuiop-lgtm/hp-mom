@@ -17,11 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log("Чи знайшов я кнопку Enter?:", enterBtn);
 
-    if (enterBtn) {
+        if (enterBtn) {
         enterBtn.addEventListener('click', () => {
             console.log("Кнопку Enter натиснуто!");
-            card1.classList.add('hidden');
-            card2.classList.remove('hidden');
 
             const audio = document.getElementById('bgMusic');
             if (audio) {
@@ -29,8 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log("Помилка відтворення:", error);
                 });
             }
+
+            card1.classList.add('hidden');
+            card2.classList.remove('hidden');
         });
-    }
+        }
+    
 
     if (backBtn) {
         backBtn.addEventListener('click', () => {
